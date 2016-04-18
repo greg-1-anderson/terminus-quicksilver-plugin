@@ -66,6 +66,40 @@ class QuicksilverCommand extends TerminusCommand {
     }
 
     /**
+     * Install everything from a profile.
+     *
+     * TODO: Terminus has a limitation that arg values are not correctly validated.
+     * 'email' is handled specially, though, so we will use that for now until
+     * this issue can be addressed.  Note also that the help text for positional
+     * arguments is also not shown.
+     *
+     *  ## OPTIONS
+     * <email>
+     * : The name of the section in 'profiles:' in ~/.quicksilver/quicksilver.yml to install.
+     */
+    public function profile($args, $assoc_args) {
+        $cwd = getcwd();
+        $localSite = new LocalSite($cwd);
+        $qsExamples = $this->prepareExamples($localSite);
+        if (!$qsExamples) {
+          return;
+        }
+
+        $profiles = $this->config()->profiles();
+        $requestedProfile = array_shift($args);
+        if (!isset($profiles[$requestedProfile])) {
+            $this->log()->error('There is no profile named {profile}.', ['profile' => $requestedProfile]);
+            return;
+        }
+        $installationSet = $profiles[$requestedProfile];
+        $this->log()->notice('Installing: ' . json_encode($installationSet));
+
+        foreach ($installationSet as $installProject) {
+            $this->doInstall($installProject, $localSite, $qsExamples);
+        }
+    }
+
+    /**
      * Install a webhook
      *
      * TODO: Terminus has a limitation that arg values are not correctly validated.
@@ -83,32 +117,26 @@ class QuicksilverCommand extends TerminusCommand {
     public function install($args, $assoc_args) {
         $requestedProject = array_shift($args);
         $cwd = getcwd();
+        $localSite = new LocalSite($cwd);
+        $qsExamples = $this->prepareExamples($localSite);
+        if (!$qsExamples) {
+          return;
+        }
+        return $this->doInstall($requestedProject, $localSite, $qsExamples);
+    }
+
+    protected function doInstall($requestedProject, $localSite, $qsExamples) {
+        $cwd = getcwd();
 
         $qsScripts = "private/scripts";
         $qsYml = "pantheon.yml";
 
-        $localSite = new LocalSite($cwd);
+        @mkdir(dirname($qsScripts));
+        @mkdir($qsScripts);
+
         // Load the pantheon.yml file
         $pantheonYml = $localSite->getPantheonYml();
         $changed = false;
-
-        list($majorVersion, $siteType) = $localSite->determineSiteType($cwd);
-        if (!$siteType) {
-            $this->log()->error("Change your working directory to a Drupal or WordPress site and run this command again.");
-            return false;
-        }
-        $this->log()->notice("Operating on a $siteType $majorVersion site.");
-
-        // Get the branch to operate on.
-        $branch = 'master';
-        if (isset($assoc_args['branch'])) {
-            $branch = $assoc_args['branch'];
-        }
-
-        $qsExamples = $this->config()->fetchExamples();
-
-        @mkdir(dirname($qsScripts));
-        @mkdir($qsScripts);
 
         // Copy the requested example into the current site
         $availableProjects = Finder::create()->directories()->in($qsExamples);
@@ -198,6 +226,23 @@ class QuicksilverCommand extends TerminusCommand {
             $pantheonYml = $localSite->writePantheonYml($pantheonYml);
             $this->log()->notice("Updated pantheon.yml.");
         }
+    }
+
+    protected function prepareExamples($localSite) {
+        list($majorVersion, $siteType) = $localSite->determineSiteType($cwd);
+        if (!$siteType) {
+            $this->log()->error("Change your working directory to a Drupal or WordPress site and run this command again.");
+            return false;
+        }
+        $this->log()->notice("Operating on a $siteType $majorVersion site.");
+
+        // Get the branch to operate on.
+        $branch = 'master';
+        if (isset($assoc_args['branch'])) {
+            $branch = $assoc_args['branch'];
+        }
+
+        return $this->config()->fetchExamples();
     }
 
     static protected function findScriptFromList($script, $availableScripts)

@@ -37,11 +37,14 @@ class Config
         return $this->logger;
     }
 
+    public function profiles() {
+        return $this->get('profiles');
+    }
+
     /**
      * Clone the example scripts
      */
-    public function fetchExamples()
-    {
+    public function fetchExamples() {
         $home = getenv('HOME');
         $qsHome = "$home/.quicksilver";
         $qsExamples = "$qsHome/examples";
