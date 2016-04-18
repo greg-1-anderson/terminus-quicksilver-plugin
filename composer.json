@@ -1,7 +1,7 @@
 {
-  "name": "pantheon-systems/cli-plugin-example",
-  "description": "A simple 'Hello, World' plugin for Terminus",
-  "homepage": "https://github.com/pantheon-systems/cli-plugin-example",
+  "name": "greg-1-anderson/terminus-quicksilver-plugin",
+  "description": "A plugin for Terminus-CLI that allows for installation of Quicksilver webhooks from the Quicksilver examples, or a personal collection.",
+  "homepage": "https://github.com/greg-1-anderson/terminus-quicksilver-plugin",
   "license": "MIT",
   "require": {
     "php": ">=5.4"

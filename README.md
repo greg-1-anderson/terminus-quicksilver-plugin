@@ -1,6 +1,13 @@
 # Terminus Quicksilver Plugin
 
-A simple plugin for Terminus-CLI that allows for installation of Quicksilver webhooks from the Quicksilver examples, or a personal collection.
+A plugin for Terminus-CLI that allows for installation of Quicksilver webhooks from the Quicksilver examples, or a personal collection.
+
+### Installation
+```
+mkdir -p ~/terminus/plugins
+cd ~/terminus/plugins
+git clone https://github.com/greg-1-anderson/terminus-quicksilver-plugin
+```
 
 ### Configuration
 This plugin will allow the user to quickly install Quicksilver webhooks pulled from either the Pantheon Quicksilver examples project, or from a personal collection of commonly-used webhooks.
