@@ -34,3 +34,9 @@ terminus quicksilver install debug
 Installs one of the example projects from quicksilver-examples, and updates the site's pantheon.yml file.  Searches for a project whose name contains the provided string; in the example above, the debugging_example will be installed.
 
 Once the sample has been installed, read its README file and customize the pantheon.yml file as needed.
+
+### Install a Predefined Set of Quicksilver Webhooks
+```
+cd /path/to/local/pantheon/site
+terminus quicksilver profile development
+```
