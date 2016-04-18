@@ -1,0 +1,13 @@
+#
+# Quicksilver configuration file
+#
+# Copy to $HOME/.quicksilver/quicksilver.yml
+#
+# Clone the Pantheon Quicksilver examples project:
+# https://github.com/pantheon-systems/quicksilver-examples
+#
+# Customize it to suit, and add an entry for it in the
+# 'repositories:' section of this configuration file.
+#
+#repositories:
+#  my-quicksilver-examples: https://github.com/me/my-quicksilver-examples.git
